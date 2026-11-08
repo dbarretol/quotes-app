@@ -11,16 +11,22 @@ import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storag
 interface Quote {
   id: string
   text: string
+  /** null when the author is unknown. */
+  author: string | null
   category: string
+  /** true when the attribution is popular but unverified. */
+  attributed?: boolean
 }
 
-// The quote list is static, so it is built once at module load.
-const ALL_QUOTES: Quote[] = Object.entries(quotesData as Record<string, string[]>).flatMap(
-  ([category, quotes]) => quotes.map((text, index) => ({ id: `${category}-${index}`, text, category })),
-)
+const ALL_QUOTES: readonly Quote[] = quotesData
 const TOTAL_QUOTES = ALL_QUOTES.length
 const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
 const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
+
+function formatAuthor({ author, attributed }: Quote): string {
+  if (!author) return "Unknown"
+  return attributed ? `attributed to ${author}` : author
+}
 
 export default function QuotesApp() {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
@@ -85,7 +91,8 @@ export default function QuotesApp() {
                   <blockquote className="text-xl font-medium text-gray-800 text-center italic leading-relaxed">
                     &ldquo;{currentQuote.text}&rdquo;
                   </blockquote>
-                  <figcaption className="flex justify-center">
+                  <figcaption className="flex flex-col items-center gap-3">
+                    <cite className="not-italic text-gray-600">&mdash; {formatAuthor(currentQuote)}</cite>
                     <Badge variant="secondary" className="text-sm px-3 py-1">
                       {currentQuote.category}
                     </Badge>
