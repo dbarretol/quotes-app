@@ -51,3 +51,7 @@ components/ui/  UI components (button, card, badge)
 data/           Quote collection
 lib/            Shared utilities
 ```
+
+## License
+
+[MIT](LICENSE)
