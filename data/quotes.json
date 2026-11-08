@@ -1,37 +1,165 @@
-{
-  "Motivation": [
-    "The only way to do great work is to love what you do.",
-    "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    "Don't watch the clock; do what it does. Keep going.",
-    "The future belongs to those who believe in the beauty of their dreams.",
-    "It is during our darkest moments that we must focus to see the light."
-  ],
-  "Success": [
-    "Success is not the key to happiness. Happiness is the key to success.",
-    "The way to get started is to quit talking and begin doing.",
-    "Innovation distinguishes between a leader and a follower.",
-    "Your limitation—it's only your imagination.",
-    "Push yourself, because no one else is going to do it for you."
-  ],
-  "Perseverance": [
-    "Fall seven times, stand up eight.",
-    "It's not whether you get knocked down, it's whether you get up.",
-    "The difference between ordinary and extraordinary is that little extra.",
-    "Champions keep playing until they get it right.",
-    "Difficult roads often lead to beautiful destinations."
-  ],
-  "Growth": [
-    "Be yourself; everyone else is already taken.",
-    "The only impossible journey is the one you never begin.",
-    "In the middle of difficulty lies opportunity.",
-    "What lies behind us and what lies before us are tiny matters compared to what lies within us.",
-    "The only person you are destined to become is the person you decide to be."
-  ],
-  "Wisdom": [
-    "Yesterday is history, tomorrow is a mystery, today is a gift.",
-    "The best time to plant a tree was 20 years ago. The second best time is now.",
-    "A journey of a thousand miles begins with a single step.",
-    "The only true wisdom is in knowing you know nothing.",
-    "Life is what happens to you while you're busy making other plans."
-  ]
-}
+[
+  {
+    "id": "love-what-you-do",
+    "text": "The only way to do great work is to love what you do.",
+    "author": "Steve Jobs",
+    "category": "Motivation"
+  },
+  {
+    "id": "courage-to-continue",
+    "text": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+    "author": "Winston Churchill",
+    "category": "Motivation",
+    "attributed": true
+  },
+  {
+    "id": "dont-watch-the-clock",
+    "text": "Don't watch the clock; do what it does. Keep going.",
+    "author": "Sam Levenson",
+    "category": "Motivation"
+  },
+  {
+    "id": "beauty-of-their-dreams",
+    "text": "The future belongs to those who believe in the beauty of their dreams.",
+    "author": "Eleanor Roosevelt",
+    "category": "Motivation",
+    "attributed": true
+  },
+  {
+    "id": "darkest-moments",
+    "text": "It is during our darkest moments that we must focus to see the light.",
+    "author": null,
+    "category": "Motivation"
+  },
+  {
+    "id": "happiness-is-the-key",
+    "text": "Success is not the key to happiness. Happiness is the key to success.",
+    "author": "Albert Schweitzer",
+    "category": "Success",
+    "attributed": true
+  },
+  {
+    "id": "quit-talking-begin-doing",
+    "text": "The way to get started is to quit talking and begin doing.",
+    "author": "Walt Disney",
+    "category": "Success",
+    "attributed": true
+  },
+  {
+    "id": "innovation-distinguishes",
+    "text": "Innovation distinguishes between a leader and a follower.",
+    "author": "Steve Jobs",
+    "category": "Success",
+    "attributed": true
+  },
+  {
+    "id": "your-limitation",
+    "text": "Your limitation—it's only your imagination.",
+    "author": null,
+    "category": "Success"
+  },
+  {
+    "id": "push-yourself",
+    "text": "Push yourself, because no one else is going to do it for you.",
+    "author": null,
+    "category": "Success"
+  },
+  {
+    "id": "fall-seven-times",
+    "text": "Fall seven times, stand up eight.",
+    "author": "Japanese proverb",
+    "category": "Perseverance"
+  },
+  {
+    "id": "whether-you-get-up",
+    "text": "It's not whether you get knocked down, it's whether you get up.",
+    "author": "Vince Lombardi",
+    "category": "Perseverance",
+    "attributed": true
+  },
+  {
+    "id": "that-little-extra",
+    "text": "The difference between ordinary and extraordinary is that little extra.",
+    "author": "Jimmy Johnson",
+    "category": "Perseverance",
+    "attributed": true
+  },
+  {
+    "id": "champions-keep-playing",
+    "text": "Champions keep playing until they get it right.",
+    "author": "Billie Jean King",
+    "category": "Perseverance",
+    "attributed": true
+  },
+  {
+    "id": "difficult-roads",
+    "text": "Difficult roads often lead to beautiful destinations.",
+    "author": null,
+    "category": "Perseverance"
+  },
+  {
+    "id": "be-yourself",
+    "text": "Be yourself; everyone else is already taken.",
+    "author": "Oscar Wilde",
+    "category": "Growth",
+    "attributed": true
+  },
+  {
+    "id": "impossible-journey",
+    "text": "The only impossible journey is the one you never begin.",
+    "author": "Tony Robbins",
+    "category": "Growth",
+    "attributed": true
+  },
+  {
+    "id": "middle-of-difficulty",
+    "text": "In the middle of difficulty lies opportunity.",
+    "author": "Albert Einstein",
+    "category": "Growth",
+    "attributed": true
+  },
+  {
+    "id": "what-lies-within-us",
+    "text": "What lies behind us and what lies before us are tiny matters compared to what lies within us.",
+    "author": "Henry Stanley Haskins",
+    "category": "Growth"
+  },
+  {
+    "id": "destined-to-become",
+    "text": "The only person you are destined to become is the person you decide to be.",
+    "author": "Ralph Waldo Emerson",
+    "category": "Growth",
+    "attributed": true
+  },
+  {
+    "id": "today-is-a-gift",
+    "text": "Yesterday is history, tomorrow is a mystery, today is a gift.",
+    "author": null,
+    "category": "Wisdom"
+  },
+  {
+    "id": "plant-a-tree",
+    "text": "The best time to plant a tree was 20 years ago. The second best time is now.",
+    "author": "Proverb",
+    "category": "Wisdom"
+  },
+  {
+    "id": "journey-of-a-thousand-miles",
+    "text": "A journey of a thousand miles begins with a single step.",
+    "author": "Lao Tzu",
+    "category": "Wisdom"
+  },
+  {
+    "id": "knowing-you-know-nothing",
+    "text": "The only true wisdom is in knowing you know nothing.",
+    "author": "Socrates",
+    "category": "Wisdom",
+    "attributed": true
+  },
+  {
+    "id": "busy-making-other-plans",
+    "text": "Life is what happens to you while you're busy making other plans.",
+    "author": "John Lennon",
+    "category": "Wisdom"
+  }
+]
