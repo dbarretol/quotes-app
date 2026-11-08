@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
-// all in fixtures is set to tailwind v3 as interims solutions
 
 const config: Config = {
     darkMode: ["class"],
@@ -93,6 +93,6 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 };
 export default config;
