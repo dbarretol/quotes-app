@@ -1,5 +1,7 @@
 # Daily Motivation
 
+[![CI](https://github.com/dbarretol/quotes-app/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/dbarretol/quotes-app/actions/workflows/ci.yml)
+
 A minimal web app that serves random motivational quotes, one at a time and without repeats.
 
 - Shows a random quote with its category
