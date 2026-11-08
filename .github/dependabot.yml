@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Stay on Tailwind CSS 3 (and tailwind-merge 2) until a planned migration.
+      - dependency-name: tailwindcss
+        update-types: [version-update:semver-major]
+      - dependency-name: tailwind-merge
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: weekly
