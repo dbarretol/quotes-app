@@ -5,28 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RefreshCw, RotateCcw } from "lucide-react"
-import quotesData from "@/data/quotes.json"
+import { QuoteActions } from "@/components/quote-actions"
 import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
+import { ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
 
-interface Quote {
-  id: string
-  text: string
-  /** null when the author is unknown. */
-  author: string | null
-  category: string
-  /** true when the attribution is popular but unverified. */
-  attributed?: boolean
-}
-
-const ALL_QUOTES: readonly Quote[] = quotesData
 const TOTAL_QUOTES = ALL_QUOTES.length
 const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
 const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
-
-function formatAuthor({ author, attributed }: Quote): string {
-  if (!author) return "Unknown"
-  return attributed ? `attributed to ${author}` : author
-}
 
 export default function QuotesApp() {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
@@ -104,6 +89,8 @@ export default function QuotesApp() {
                 </p>
               )}
             </div>
+
+            {currentQuote && <QuoteActions quote={currentQuote} />}
 
             <div className="flex flex-col items-center space-y-4">
               {!isAllQuotesUsed ? (
