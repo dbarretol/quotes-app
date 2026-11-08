@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RefreshCw, RotateCcw } from "lucide-react"
 import quotesData from "@/data/quotes.json"
+import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
 
 interface Quote {
   id: string
@@ -18,10 +19,32 @@ const ALL_QUOTES: Quote[] = Object.entries(quotesData as Record<string, string[]
   ([category, quotes]) => quotes.map((text, index) => ({ id: `${category}-${index}`, text, category })),
 )
 const TOTAL_QUOTES = ALL_QUOTES.length
+const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
+const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
 
 export default function QuotesApp() {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
   const [usedIds, setUsedIds] = useState<ReadonlySet<string>>(() => new Set())
+  // Saved progress is read after mount, since localStorage is not available during prerendering.
+  const [isRestored, setIsRestored] = useState(false)
+
+  useEffect(() => {
+    const saved = loadProgress(VALID_IDS)
+    if (saved) {
+      setUsedIds(new Set(saved.usedIds))
+      setCurrentQuote(saved.currentId ? (QUOTES_BY_ID.get(saved.currentId) ?? null) : null)
+    }
+    setIsRestored(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isRestored) return
+    if (usedIds.size === 0) {
+      clearProgress()
+    } else {
+      saveProgress({ usedIds: [...usedIds], currentId: currentQuote?.id ?? null })
+    }
+  }, [isRestored, usedIds, currentQuote])
 
   const shownCount = usedIds.size
   const isAllQuotesUsed = TOTAL_QUOTES > 0 && shownCount >= TOTAL_QUOTES

@@ -6,7 +6,7 @@ A minimal web app that serves random motivational quotes, one at a time and with
 
 - Shows a random quote with its category
 - Never repeats a quote until you have seen them all
-- Tracks your progress and lets you start over at any time
+- Tracks your progress, saves it in your browser and lets you start over at any time
 
 Built with [Next.js](https://nextjs.org/) 15, React 19, [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) components.
 
