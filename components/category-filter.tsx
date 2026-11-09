@@ -1,6 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { PosterButton } from "@/components/poster-button"
+import { getCategorySwatch } from "@/lib/category-theme"
 
 interface CategoryFilterProps {
   categories: readonly string[]
@@ -26,22 +27,29 @@ export function CategoryFilter({ categories, selected, onChange }: CategoryFilte
   }
 
   return (
-    <div role="group" aria-label="Filter quotes by category" className="flex flex-wrap justify-center gap-2">
-      <Button size="sm" variant={allSelected ? "default" : "outline"} aria-pressed={allSelected} onClick={selectAll}>
+    <div role="group" aria-label="Filter quotes by category" className="flex flex-wrap gap-2">
+      <PosterButton variant={allSelected ? "solid" : "outline"} aria-pressed={allSelected} onClick={selectAll}>
         All
-      </Button>
+      </PosterButton>
       {categories.map((category) => {
         const isActive = !allSelected && selected.has(category)
+        const swatch = getCategorySwatch(category)
         return (
-          <Button
+          <PosterButton
             key={category}
-            size="sm"
-            variant={isActive ? "default" : "outline"}
+            variant={isActive ? "solid" : "outline"}
             aria-pressed={isActive}
             onClick={() => toggle(category)}
           >
+            {swatch && (
+              <span
+                aria-hidden="true"
+                className="size-3 rounded-full ring-1 ring-current"
+                style={{ backgroundColor: swatch }}
+              />
+            )}
             {category}
-          </Button>
+          </PosterButton>
         )
       })}
     </div>

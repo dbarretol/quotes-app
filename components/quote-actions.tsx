@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Check, Copy, Share2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { PosterButton } from "@/components/poster-button"
 import { formatQuoteForSharing, type Quote } from "@/lib/quotes"
 
 type CopyStatus = "idle" | "copied" | "failed"
@@ -46,20 +46,16 @@ export function QuoteActions({ quote }: { quote: Quote }) {
   }
 
   return (
-    <div className="flex justify-center gap-2">
-      <Button variant="outline" size="sm" onClick={handleCopy}>
-        {copyStatus === "copied" ? (
-          <Check className="w-4 h-4 mr-2" aria-hidden="true" />
-        ) : (
-          <Copy className="w-4 h-4 mr-2" aria-hidden="true" />
-        )}
+    <div className="flex gap-2">
+      <PosterButton variant="quiet" onClick={handleCopy}>
+        {copyStatus === "copied" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
         {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : "Copy"}
-      </Button>
+      </PosterButton>
       {canShare && (
-        <Button variant="outline" size="sm" onClick={handleShare}>
-          <Share2 className="w-4 h-4 mr-2" aria-hidden="true" />
+        <PosterButton variant="quiet" onClick={handleShare}>
+          <Share2 aria-hidden="true" />
           Share
-        </Button>
+        </PosterButton>
       )}
       <span className="sr-only" aria-live="polite">
         {copyStatus === "copied" ? "Quote copied to clipboard" : copyStatus === "failed" ? "Could not copy the quote" : ""}

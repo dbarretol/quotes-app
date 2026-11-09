@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-08
+
+A new poster-style design and a round of usability fixes.
+
+### Added
+
+- Each category has its own color; the whole screen takes the color of the quote on display, with a darker palette in dark mode ([#21](https://github.com/dbarretol/quotes-app/pull/21))
+- Resetting progress can be undone for a few seconds ([#20](https://github.com/dbarretol/quotes-app/pull/20))
+- The category filter is kept in the URL, so filtered links can be shared ([#20](https://github.com/dbarretol/quotes-app/pull/20))
+
+### Changed
+
+- Quotes are shown at poster size in Archivo condensed, left-aligned, without a card ([#21](https://github.com/dbarretol/quotes-app/pull/21))
+- Controls stay fixed at the bottom of the screen; buttons use sentence case ("Next quote") ([#21](https://github.com/dbarretol/quotes-app/pull/21))
+- Category buttons show their color and are larger on touch screens ([#20](https://github.com/dbarretol/quotes-app/pull/20), [#21](https://github.com/dbarretol/quotes-app/pull/21))
+
+### Fixed
+
+- The main button no longer moves between quotes ([#20](https://github.com/dbarretol/quotes-app/pull/20))
+- No content flash or screen reader announcement when saved progress is restored ([#20](https://github.com/dbarretol/quotes-app/pull/20))
+- Native scrollbars and controls follow the dark theme ([#20](https://github.com/dbarretol/quotes-app/pull/20))
+
+### Removed
+
+- shadcn/ui components and the `geist`, `@radix-ui/react-slot` and `class-variance-authority` dependencies ([#21](https://github.com/dbarretol/quotes-app/pull/21))
+
 ## [1.1.0] - 2026-11-08
 
 ### Added
@@ -58,5 +84,6 @@ First stable release.
 
 - Resolved all `npm audit` findings, including a critical vulnerability in `next@15.2.4` ([#1](https://github.com/dbarretol/quotes-app/pull/1))
 
+[1.2.0]: https://github.com/dbarretol/quotes-app/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/dbarretol/quotes-app/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/dbarretol/quotes-app/releases/tag/v1.0.0
