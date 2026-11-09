@@ -4,6 +4,8 @@ const STORAGE_VERSION = 1
 export interface StoredProgress {
   usedIds: string[]
   currentId: string | null
+  /** Selected categories; absent means all categories. */
+  categories?: string[]
 }
 
 interface StoredPayload extends StoredProgress {
@@ -11,10 +13,13 @@ interface StoredPayload extends StoredProgress {
 }
 
 /**
- * Reads saved progress, keeping only ids that still exist in the quote list.
+ * Reads saved progress, keeping only ids and categories that still exist in the quote list.
  * Returns null when nothing valid is stored or storage is unavailable.
  */
-export function loadProgress(validIds: ReadonlySet<string>): StoredProgress | null {
+export function loadProgress(
+  validIds: ReadonlySet<string>,
+  validCategories: ReadonlySet<string>,
+): StoredProgress | null {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
@@ -26,7 +31,11 @@ export function loadProgress(validIds: ReadonlySet<string>): StoredProgress | nu
     const currentId =
       typeof data.currentId === "string" && usedIds.includes(data.currentId) ? data.currentId : null
 
-    return { usedIds, currentId }
+    const categories = Array.isArray(data.categories)
+      ? data.categories.filter((c): c is string => typeof c === "string" && validCategories.has(c))
+      : []
+
+    return { usedIds, currentId, ...(categories.length > 0 && { categories }) }
   } catch {
     return null
   }

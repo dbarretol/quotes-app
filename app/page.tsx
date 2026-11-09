@@ -5,44 +5,56 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RefreshCw, RotateCcw } from "lucide-react"
+import { CategoryFilter } from "@/components/category-filter"
 import { QuoteActions } from "@/components/quote-actions"
 import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
-import { ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
+import { ALL_CATEGORIES, ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
 
-const TOTAL_QUOTES = ALL_QUOTES.length
 const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
 const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
+const VALID_CATEGORIES: ReadonlySet<string> = new Set(ALL_CATEGORIES)
 
 export default function QuotesApp() {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
   const [usedIds, setUsedIds] = useState<ReadonlySet<string>>(() => new Set())
+  const [categories, setCategories] = useState<ReadonlySet<string>>(() => new Set(ALL_CATEGORIES))
   // Saved progress is read after mount, since localStorage is not available during prerendering.
   const [isRestored, setIsRestored] = useState(false)
 
   useEffect(() => {
-    const saved = loadProgress(VALID_IDS)
+    const saved = loadProgress(VALID_IDS, VALID_CATEGORIES)
     if (saved) {
       setUsedIds(new Set(saved.usedIds))
       setCurrentQuote(saved.currentId ? (QUOTES_BY_ID.get(saved.currentId) ?? null) : null)
+      if (saved.categories) setCategories(new Set(saved.categories))
     }
     setIsRestored(true)
   }, [])
 
   useEffect(() => {
     if (!isRestored) return
-    if (usedIds.size === 0) {
+    const allCategories = categories.size === ALL_CATEGORIES.length
+    if (usedIds.size === 0 && allCategories) {
       clearProgress()
     } else {
-      saveProgress({ usedIds: [...usedIds], currentId: currentQuote?.id ?? null })
+      saveProgress({
+        usedIds: [...usedIds],
+        currentId: currentQuote?.id ?? null,
+        ...(!allCategories && { categories: [...categories] }),
+      })
     }
-  }, [isRestored, usedIds, currentQuote])
+  }, [isRestored, usedIds, currentQuote, categories])
 
-  const shownCount = usedIds.size
-  const isAllQuotesUsed = TOTAL_QUOTES > 0 && shownCount >= TOTAL_QUOTES
-  const progress = TOTAL_QUOTES > 0 ? Math.round((shownCount / TOTAL_QUOTES) * 100) : 0
+  // Progress is measured within the selected categories.
+  const pool = ALL_QUOTES.filter((quote) => categories.has(quote.category))
+  const poolSize = pool.length
+  const isFiltered = categories.size < ALL_CATEGORIES.length
+  const shownCount = pool.filter((quote) => usedIds.has(quote.id)).length
+  const isAllQuotesUsed = poolSize > 0 && shownCount >= poolSize
+  const progress = poolSize > 0 ? Math.round((shownCount / poolSize) * 100) : 0
 
   const handleNewQuote = () => {
-    const unusedQuotes = ALL_QUOTES.filter((quote) => !usedIds.has(quote.id))
+    const unusedQuotes = pool.filter((quote) => !usedIds.has(quote.id))
     if (unusedQuotes.length === 0) return
 
     const selectedQuote = unusedQuotes[Math.floor(Math.random() * unusedQuotes.length)]
@@ -50,8 +62,10 @@ export default function QuotesApp() {
     setUsedIds((prev) => new Set(prev).add(selectedQuote.id))
   }
 
+  // Resets progress for the selected categories only; other categories keep theirs.
   const handleReset = () => {
-    setUsedIds(new Set())
+    const poolIds = new Set(pool.map((quote) => quote.id))
+    setUsedIds((prev) => new Set([...prev].filter((id) => !poolIds.has(id))))
     setCurrentQuote(null)
   }
 
@@ -62,6 +76,8 @@ export default function QuotesApp() {
           <h1 className="text-4xl font-bold text-gray-800">Daily Motivation</h1>
           <p className="text-gray-600">Get inspired with random motivational quotes</p>
         </header>
+
+        <CategoryFilter categories={ALL_CATEGORIES} selected={categories} onChange={setCategories} />
 
         <Card className="shadow-lg">
           <CardHeader className="text-center">
@@ -101,7 +117,7 @@ export default function QuotesApp() {
               ) : (
                 <div className="text-center space-y-4">
                   <p className="text-lg font-medium text-gray-700">
-                    🎉 You&apos;ve seen all {TOTAL_QUOTES} quotes!
+                    🎉 You&apos;ve seen all {poolSize} quotes{isFiltered && " in the selected categories"}!
                   </p>
                   <Button
                     onClick={handleReset}
@@ -117,13 +133,13 @@ export default function QuotesApp() {
 
               <div className="w-full text-sm text-gray-500 text-center">
                 <p id="progress-label">
-                  Quotes shown: {shownCount} / {TOTAL_QUOTES}
+                  Quotes shown: {shownCount} / {poolSize}
                 </p>
                 <div
                   role="progressbar"
                   aria-labelledby="progress-label"
                   aria-valuemin={0}
-                  aria-valuemax={TOTAL_QUOTES}
+                  aria-valuemax={poolSize}
                   aria-valuenow={shownCount}
                   className="w-full bg-gray-200 rounded-full h-2 mt-2"
                 >

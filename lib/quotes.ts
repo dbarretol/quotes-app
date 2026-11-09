@@ -12,6 +12,9 @@ export interface Quote {
 
 export const ALL_QUOTES: readonly Quote[] = quotesData
 
+/** Categories in order of first appearance in the quote list. */
+export const ALL_CATEGORIES: readonly string[] = [...new Set(ALL_QUOTES.map((quote) => quote.category))]
+
 /** Author line shown under a quote. */
 export function formatAuthor({ author, attributed }: Quote): string {
   if (!author) return "Unknown"
