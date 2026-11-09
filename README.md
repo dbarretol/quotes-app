@@ -9,6 +9,7 @@ A minimal web app that serves random motivational quotes, one at a time and with
 - Shows a random quote with its author and category
 - Copy a quote to the clipboard or share it (where the browser supports sharing)
 - Filter quotes by category
+- Light and dark themes (follows your system setting by default)
 - Never repeats a quote until you have seen them all
 - Tracks your progress, saves it in your browser and lets you start over at any time
 
@@ -64,7 +65,7 @@ Run `npm run validate:quotes` to check the file; CI runs it on every pull reques
 
 ```
 app/            Next.js App Router (layout, page, global styles)
-components/     App components (category filter, quote actions)
+components/     App components (category filter, quote actions, theme)
 components/ui/  UI components (button, card, badge)
 data/           Quote collection
 lib/            Shared utilities and site configuration

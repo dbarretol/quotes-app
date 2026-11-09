@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { RefreshCw, RotateCcw } from "lucide-react"
 import { CategoryFilter } from "@/components/category-filter"
 import { QuoteActions } from "@/components/quote-actions"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
 import { ALL_CATEGORIES, ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
 
@@ -70,37 +71,43 @@ export default function QuotesApp() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+    <main className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-950 dark:to-indigo-950 p-4 flex items-center justify-center">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-2xl space-y-6">
         <header className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-gray-800">Daily Motivation</h1>
-          <p className="text-gray-600">Get inspired with random motivational quotes</p>
+          <h1 className="text-4xl font-bold text-foreground">Daily Motivation</h1>
+          <p className="text-muted-foreground">Get inspired with random motivational quotes</p>
         </header>
 
         <CategoryFilter categories={ALL_CATEGORIES} selected={categories} onChange={setCategories} />
 
         <Card className="shadow-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-gray-700">
+            <CardTitle className="text-2xl text-foreground/90">
               {currentQuote ? "Your Quote" : "Ready for Inspiration?"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div aria-live="polite">
               {currentQuote ? (
-                <figure className="space-y-4">
-                  <blockquote className="text-xl font-medium text-gray-800 text-center italic leading-relaxed">
+                <figure
+                  key={currentQuote.id}
+                  className="space-y-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300"
+                >
+                  <blockquote className="text-xl font-medium text-foreground text-center italic leading-relaxed">
                     &ldquo;{currentQuote.text}&rdquo;
                   </blockquote>
                   <figcaption className="flex flex-col items-center gap-3">
-                    <cite className="not-italic text-gray-600">&mdash; {formatAuthor(currentQuote)}</cite>
+                    <cite className="not-italic text-muted-foreground">&mdash; {formatAuthor(currentQuote)}</cite>
                     <Badge variant="secondary" className="text-sm px-3 py-1">
                       {currentQuote.category}
                     </Badge>
                   </figcaption>
                 </figure>
               ) : (
-                <p className="text-center text-gray-500 py-8 text-lg">
+                <p className="text-center text-muted-foreground py-8 text-lg">
                   Click the button below to get your first motivational quote!
                 </p>
               )}
@@ -116,7 +123,7 @@ export default function QuotesApp() {
                 </Button>
               ) : (
                 <div className="text-center space-y-4">
-                  <p className="text-lg font-medium text-gray-700">
+                  <p className="text-lg font-medium text-foreground/90">
                     🎉 You&apos;ve seen all {poolSize} quotes{isFiltered && " in the selected categories"}!
                   </p>
                   <Button
@@ -131,7 +138,7 @@ export default function QuotesApp() {
                 </div>
               )}
 
-              <div className="w-full text-sm text-gray-500 text-center">
+              <div className="w-full text-sm text-muted-foreground text-center">
                 <p id="progress-label">
                   Quotes shown: {shownCount} / {poolSize}
                 </p>
@@ -141,10 +148,10 @@ export default function QuotesApp() {
                   aria-valuemin={0}
                   aria-valuemax={poolSize}
                   aria-valuenow={shownCount}
-                  className="w-full bg-gray-200 rounded-full h-2 mt-2"
+                  className="w-full bg-muted rounded-full h-2 mt-2"
                 >
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full motion-safe:transition-all motion-safe:duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -155,7 +162,7 @@ export default function QuotesApp() {
 
         {currentQuote && !isAllQuotesUsed && (
           <div className="text-center">
-            <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+            <Button onClick={handleReset} variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <RotateCcw className="w-4 h-4 mr-2" aria-hidden="true" />
               Reset Progress
             </Button>
