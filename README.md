@@ -15,11 +15,11 @@ A minimal web app that serves random motivational quotes, one at a time and with
 
 Each category has its own color, and the whole screen takes the color of the quote on display.
 
-Built with [Next.js](https://nextjs.org/) 15, React 19 and [Tailwind CSS](https://tailwindcss.com/), set in [Archivo](https://fonts.google.com/specimen/Archivo).
+Built with [Next.js](https://nextjs.org/) 16, React 19 and [Tailwind CSS](https://tailwindcss.com/), set in [Archivo](https://fonts.google.com/specimen/Archivo).
 
 ## Getting started
 
-Requirements: Node.js 18.18 or later and npm.
+Requirements: Node.js 20.9 or later and npm.
 
 ```bash
 npm install
@@ -33,7 +33,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 | Command | Description |
 |---|---|
 | `npm run dev` | Start the development server |
-| `npm run build` | Create a production build (runs lint and type checks) |
+| `npm run build` | Create a production build (includes type checks) |
 | `npm run start` | Serve the production build |
 | `npm run lint` | Run ESLint |
 | `npm run typecheck` | Run the TypeScript compiler without emitting files |
