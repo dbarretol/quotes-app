@@ -4,6 +4,8 @@
 
 A minimal web app that serves random motivational quotes, one at a time and without repeats.
 
+**Live demo:** [quotes-app-delta.vercel.app](https://quotes-app-delta.vercel.app/)
+
 - Shows a random quote with its author and category
 - Copy a quote to the clipboard or share it (where the browser supports sharing)
 - Filter quotes by category
@@ -65,7 +67,7 @@ app/            Next.js App Router (layout, page, global styles)
 components/     App components (category filter, quote actions)
 components/ui/  UI components (button, card, badge)
 data/           Quote collection
-lib/            Shared utilities
+lib/            Shared utilities and site configuration
 scripts/        Maintenance scripts
 ```
 
