@@ -129,7 +129,7 @@ export default function QuotesApp() {
         {!isRestored ? null : currentQuote ? (
           <figure key={currentQuote.id} className="max-w-5xl motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
             <blockquote
-              className={`font-condensed font-bold leading-[1.02] tracking-tight text-pretty [text-indent:-0.4em] ${quoteSizeClass(currentQuote.text)}`}
+              className={`font-condensed font-bold leading-[1.02] text-pretty [text-indent:-0.3em] ${quoteSizeClass(currentQuote.text)}`}
             >
               &ldquo;{currentQuote.text}&rdquo;
             </blockquote>
