@@ -8,10 +8,10 @@ A minimal web app that serves random motivational quotes, one at a time and with
 
 - Shows a random quote with its author and category
 - Copy a quote to the clipboard or share it (where the browser supports sharing)
-- Filter quotes by category
+- Filter quotes by category (the filter is kept in the URL, so filtered links can be shared)
 - Light and dark themes (follows your system setting by default)
 - Never repeats a quote until you have seen them all
-- Tracks your progress, saves it in your browser and lets you start over at any time
+- Tracks your progress, saves it in your browser and lets you start over at any time (with undo)
 
 Built with [Next.js](https://nextjs.org/) 15, React 19, [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) components.
 
