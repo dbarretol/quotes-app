@@ -9,10 +9,9 @@ updates:
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
-      # Stay on Tailwind CSS 3 (and tailwind-merge 2) until a planned migration.
-      - dependency-name: tailwindcss
-        update-types: [version-update:semver-major]
-      - dependency-name: tailwind-merge
+      # Major upgrades (Next.js, React, Tailwind CSS, ESLint, TypeScript, ...) are
+      # handled as planned migrations rather than automated pull requests.
+      - dependency-name: "*"
         update-types: [version-update:semver-major]
 
   - package-ecosystem: github-actions

@@ -5,44 +5,57 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RefreshCw, RotateCcw } from "lucide-react"
+import { CategoryFilter } from "@/components/category-filter"
 import { QuoteActions } from "@/components/quote-actions"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
-import { ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
+import { ALL_CATEGORIES, ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
 
-const TOTAL_QUOTES = ALL_QUOTES.length
 const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
 const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
+const VALID_CATEGORIES: ReadonlySet<string> = new Set(ALL_CATEGORIES)
 
 export default function QuotesApp() {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
   const [usedIds, setUsedIds] = useState<ReadonlySet<string>>(() => new Set())
+  const [categories, setCategories] = useState<ReadonlySet<string>>(() => new Set(ALL_CATEGORIES))
   // Saved progress is read after mount, since localStorage is not available during prerendering.
   const [isRestored, setIsRestored] = useState(false)
 
   useEffect(() => {
-    const saved = loadProgress(VALID_IDS)
+    const saved = loadProgress(VALID_IDS, VALID_CATEGORIES)
     if (saved) {
       setUsedIds(new Set(saved.usedIds))
       setCurrentQuote(saved.currentId ? (QUOTES_BY_ID.get(saved.currentId) ?? null) : null)
+      if (saved.categories) setCategories(new Set(saved.categories))
     }
     setIsRestored(true)
   }, [])
 
   useEffect(() => {
     if (!isRestored) return
-    if (usedIds.size === 0) {
+    const allCategories = categories.size === ALL_CATEGORIES.length
+    if (usedIds.size === 0 && allCategories) {
       clearProgress()
     } else {
-      saveProgress({ usedIds: [...usedIds], currentId: currentQuote?.id ?? null })
+      saveProgress({
+        usedIds: [...usedIds],
+        currentId: currentQuote?.id ?? null,
+        ...(!allCategories && { categories: [...categories] }),
+      })
     }
-  }, [isRestored, usedIds, currentQuote])
+  }, [isRestored, usedIds, currentQuote, categories])
 
-  const shownCount = usedIds.size
-  const isAllQuotesUsed = TOTAL_QUOTES > 0 && shownCount >= TOTAL_QUOTES
-  const progress = TOTAL_QUOTES > 0 ? Math.round((shownCount / TOTAL_QUOTES) * 100) : 0
+  // Progress is measured within the selected categories.
+  const pool = ALL_QUOTES.filter((quote) => categories.has(quote.category))
+  const poolSize = pool.length
+  const isFiltered = categories.size < ALL_CATEGORIES.length
+  const shownCount = pool.filter((quote) => usedIds.has(quote.id)).length
+  const isAllQuotesUsed = poolSize > 0 && shownCount >= poolSize
+  const progress = poolSize > 0 ? Math.round((shownCount / poolSize) * 100) : 0
 
   const handleNewQuote = () => {
-    const unusedQuotes = ALL_QUOTES.filter((quote) => !usedIds.has(quote.id))
+    const unusedQuotes = pool.filter((quote) => !usedIds.has(quote.id))
     if (unusedQuotes.length === 0) return
 
     const selectedQuote = unusedQuotes[Math.floor(Math.random() * unusedQuotes.length)]
@@ -50,41 +63,51 @@ export default function QuotesApp() {
     setUsedIds((prev) => new Set(prev).add(selectedQuote.id))
   }
 
+  // Resets progress for the selected categories only; other categories keep theirs.
   const handleReset = () => {
-    setUsedIds(new Set())
+    const poolIds = new Set(pool.map((quote) => quote.id))
+    setUsedIds((prev) => new Set([...prev].filter((id) => !poolIds.has(id))))
     setCurrentQuote(null)
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+    <main className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-950 dark:to-indigo-950 p-4 flex items-center justify-center">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-2xl space-y-6">
         <header className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-gray-800">Daily Motivation</h1>
-          <p className="text-gray-600">Get inspired with random motivational quotes</p>
+          <h1 className="text-4xl font-bold text-foreground">Daily Motivation</h1>
+          <p className="text-muted-foreground">Get inspired with random motivational quotes</p>
         </header>
+
+        <CategoryFilter categories={ALL_CATEGORIES} selected={categories} onChange={setCategories} />
 
         <Card className="shadow-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-gray-700">
+            <CardTitle className="text-2xl text-foreground/90">
               {currentQuote ? "Your Quote" : "Ready for Inspiration?"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div aria-live="polite">
               {currentQuote ? (
-                <figure className="space-y-4">
-                  <blockquote className="text-xl font-medium text-gray-800 text-center italic leading-relaxed">
+                <figure
+                  key={currentQuote.id}
+                  className="space-y-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300"
+                >
+                  <blockquote className="text-xl font-medium text-foreground text-center italic leading-relaxed">
                     &ldquo;{currentQuote.text}&rdquo;
                   </blockquote>
                   <figcaption className="flex flex-col items-center gap-3">
-                    <cite className="not-italic text-gray-600">&mdash; {formatAuthor(currentQuote)}</cite>
+                    <cite className="not-italic text-muted-foreground">&mdash; {formatAuthor(currentQuote)}</cite>
                     <Badge variant="secondary" className="text-sm px-3 py-1">
                       {currentQuote.category}
                     </Badge>
                   </figcaption>
                 </figure>
               ) : (
-                <p className="text-center text-gray-500 py-8 text-lg">
+                <p className="text-center text-muted-foreground py-8 text-lg">
                   Click the button below to get your first motivational quote!
                 </p>
               )}
@@ -100,8 +123,8 @@ export default function QuotesApp() {
                 </Button>
               ) : (
                 <div className="text-center space-y-4">
-                  <p className="text-lg font-medium text-gray-700">
-                    🎉 You&apos;ve seen all {TOTAL_QUOTES} quotes!
+                  <p className="text-lg font-medium text-foreground/90">
+                    🎉 You&apos;ve seen all {poolSize} quotes{isFiltered && " in the selected categories"}!
                   </p>
                   <Button
                     onClick={handleReset}
@@ -115,20 +138,20 @@ export default function QuotesApp() {
                 </div>
               )}
 
-              <div className="w-full text-sm text-gray-500 text-center">
+              <div className="w-full text-sm text-muted-foreground text-center">
                 <p id="progress-label">
-                  Quotes shown: {shownCount} / {TOTAL_QUOTES}
+                  Quotes shown: {shownCount} / {poolSize}
                 </p>
                 <div
                   role="progressbar"
                   aria-labelledby="progress-label"
                   aria-valuemin={0}
-                  aria-valuemax={TOTAL_QUOTES}
+                  aria-valuemax={poolSize}
                   aria-valuenow={shownCount}
-                  className="w-full bg-gray-200 rounded-full h-2 mt-2"
+                  className="w-full bg-muted rounded-full h-2 mt-2"
                 >
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full motion-safe:transition-all motion-safe:duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -139,7 +162,7 @@ export default function QuotesApp() {
 
         {currentQuote && !isAllQuotesUsed && (
           <div className="text-center">
-            <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+            <Button onClick={handleReset} variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <RotateCcw className="w-4 h-4 mr-2" aria-hidden="true" />
               Reset Progress
             </Button>
