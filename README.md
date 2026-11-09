@@ -13,7 +13,9 @@ A minimal web app that serves random motivational quotes, one at a time and with
 - Never repeats a quote until you have seen them all
 - Tracks your progress, saves it in your browser and lets you start over at any time (with undo)
 
-Built with [Next.js](https://nextjs.org/) 15, React 19, [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) components.
+Each category has its own color, and the whole screen takes the color of the quote on display.
+
+Built with [Next.js](https://nextjs.org/) 15, React 19 and [Tailwind CSS](https://tailwindcss.com/), set in [Archivo](https://fonts.google.com/specimen/Archivo).
 
 ## Getting started
 
@@ -65,10 +67,9 @@ Run `npm run validate:quotes` to check the file; CI runs it on every pull reques
 
 ```
 app/            Next.js App Router (layout, page, global styles)
-components/     App components (category filter, quote actions, theme)
-components/ui/  UI components (button, card, badge)
+components/     App components (category filter, quote actions, theme toggle, buttons)
 data/           Quote collection
-lib/            Shared utilities and site configuration
+lib/            Quote data helpers, category colors, storage, URL and site configuration
 scripts/        Maintenance scripts
 ```
 

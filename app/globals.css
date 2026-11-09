@@ -94,3 +94,27 @@
     touch-action: manipulation;
   }
 }
+
+/* Full-screen poster colored by the current quote's category (see lib/category-theme.ts). */
+@layer components {
+  .poster {
+    --poster-bg: var(--poster-bg-light);
+    --poster-fg: var(--poster-fg-light);
+    background-color: var(--poster-bg);
+    color: var(--poster-fg);
+  }
+  .dark .poster {
+    --poster-bg: var(--poster-bg-dark);
+    --poster-fg: var(--poster-fg-dark);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .poster {
+      transition:
+        background-color 500ms ease-out,
+        color 500ms ease-out;
+    }
+  }
+  .font-condensed {
+    font-variation-settings: "wdth" 62;
+  }
+}

@@ -1,6 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { PosterButton } from "@/components/poster-button"
+import { getCategorySwatch } from "@/lib/category-theme"
 
 interface CategoryFilterProps {
   categories: readonly string[]
@@ -8,9 +9,6 @@ interface CategoryFilterProps {
   selected: ReadonlySet<string>
   onChange: (selected: ReadonlySet<string>) => void
 }
-
-// 44px tall on touch screens, compact on larger screens.
-const TOUCH_TARGET = "h-11 sm:h-9"
 
 export function CategoryFilter({ categories, selected, onChange }: CategoryFilterProps) {
   const allSelected = selected.size === categories.length
@@ -29,29 +27,29 @@ export function CategoryFilter({ categories, selected, onChange }: CategoryFilte
   }
 
   return (
-    <div role="group" aria-label="Filter quotes by category" className="flex flex-wrap justify-center gap-2">
-      <Button
-        size="sm"
-        className={TOUCH_TARGET}
-        variant={allSelected ? "default" : "outline"}
-        aria-pressed={allSelected}
-        onClick={selectAll}
-      >
+    <div role="group" aria-label="Filter quotes by category" className="flex flex-wrap gap-2">
+      <PosterButton variant={allSelected ? "solid" : "outline"} aria-pressed={allSelected} onClick={selectAll}>
         All
-      </Button>
+      </PosterButton>
       {categories.map((category) => {
         const isActive = !allSelected && selected.has(category)
+        const swatch = getCategorySwatch(category)
         return (
-          <Button
+          <PosterButton
             key={category}
-            size="sm"
-            className={TOUCH_TARGET}
-            variant={isActive ? "default" : "outline"}
+            variant={isActive ? "solid" : "outline"}
             aria-pressed={isActive}
             onClick={() => toggle(category)}
           >
+            {swatch && (
+              <span
+                aria-hidden="true"
+                className="size-3 rounded-full ring-1 ring-current"
+                style={{ backgroundColor: swatch }}
+              />
+            )}
             {category}
-          </Button>
+          </PosterButton>
         )
       })}
     </div>

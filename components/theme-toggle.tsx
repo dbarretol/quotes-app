@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import { PosterButton } from "@/components/poster-button"
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
@@ -15,15 +15,15 @@ export function ThemeToggle() {
   const label = isDark ? "Switch to light theme" : "Switch to dark theme"
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <PosterButton
+      variant="quiet"
+      className="size-11 sm:size-9 px-0 hover:opacity-70"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={label}
       title={label}
       disabled={!mounted}
     >
-      {isDark ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
-    </Button>
+      {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+    </PosterButton>
   )
 }
