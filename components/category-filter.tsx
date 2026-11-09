@@ -9,6 +9,9 @@ interface CategoryFilterProps {
   onChange: (selected: ReadonlySet<string>) => void
 }
 
+// 44px tall on touch screens, compact on larger screens.
+const TOUCH_TARGET = "h-11 sm:h-9"
+
 export function CategoryFilter({ categories, selected, onChange }: CategoryFilterProps) {
   const allSelected = selected.size === categories.length
 
@@ -27,7 +30,13 @@ export function CategoryFilter({ categories, selected, onChange }: CategoryFilte
 
   return (
     <div role="group" aria-label="Filter quotes by category" className="flex flex-wrap justify-center gap-2">
-      <Button size="sm" variant={allSelected ? "default" : "outline"} aria-pressed={allSelected} onClick={selectAll}>
+      <Button
+        size="sm"
+        className={TOUCH_TARGET}
+        variant={allSelected ? "default" : "outline"}
+        aria-pressed={allSelected}
+        onClick={selectAll}
+      >
         All
       </Button>
       {categories.map((category) => {
@@ -36,6 +45,7 @@ export function CategoryFilter({ categories, selected, onChange }: CategoryFilte
           <Button
             key={category}
             size="sm"
+            className={TOUCH_TARGET}
             variant={isActive ? "default" : "outline"}
             aria-pressed={isActive}
             onClick={() => toggle(category)}
