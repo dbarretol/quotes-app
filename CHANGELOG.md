@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-11-08
+
+### Added
+
+- Filter quotes by category; progress, completion and reset apply to the selected categories ([#15](https://github.com/dbarretol/quotes-app/pull/15))
+- Light and dark themes with a toggle; follows the system setting by default ([#17](https://github.com/dbarretol/quotes-app/pull/17))
+- Fade-in transition for new quotes, disabled when reduced motion is preferred ([#17](https://github.com/dbarretol/quotes-app/pull/17))
+- Production URL, canonical link, Open Graph and Twitter metadata ([#16](https://github.com/dbarretol/quotes-app/pull/16))
+- `robots.txt` and `sitemap.xml` ([#16](https://github.com/dbarretol/quotes-app/pull/16))
+- Live demo link in the README ([#16](https://github.com/dbarretol/quotes-app/pull/16))
+
+### Changed
+
+- Dependabot only proposes minor and patch updates; major upgrades are planned separately ([#14](https://github.com/dbarretol/quotes-app/pull/14))
+
 ## [1.0.0] - 2026-11-08
 
 First stable release.
@@ -43,4 +58,5 @@ First stable release.
 
 - Resolved all `npm audit` findings, including a critical vulnerability in `next@15.2.4` ([#1](https://github.com/dbarretol/quotes-app/pull/1))
 
+[1.1.0]: https://github.com/dbarretol/quotes-app/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/dbarretol/quotes-app/releases/tag/v1.0.0
