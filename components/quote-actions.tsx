@@ -53,7 +53,7 @@ export function QuoteActions({ quote }: { quote: Quote }) {
         ) : (
           <Copy className="w-4 h-4 mr-2" aria-hidden="true" />
         )}
-        {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : "Copy"}
+        {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy Failed" : "Copy"}
       </Button>
       {canShare && (
         <Button variant="outline" size="sm" onClick={handleShare}>
