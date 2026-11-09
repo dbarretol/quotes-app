@@ -4,27 +4,22 @@ import { useEffect, useRef, useState } from "react"
 import { Check, Copy, Share2 } from "lucide-react"
 import { PosterButton } from "@/components/poster-button"
 import { formatQuoteForSharing, type Quote } from "@/lib/quotes"
+import { useClientValue } from "@/lib/use-is-client"
 
 type CopyStatus = "idle" | "copied" | "failed"
 
 const STATUS_RESET_MS = 2000
 
+const canUseWebShare = () => typeof navigator.share === "function"
+
+/** Render with `key={quote.id}` so the copy feedback resets for each new quote. */
 export function QuoteActions({ quote }: { quote: Quote }) {
   const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle")
-  // The Web Share API only exists in the browser (mostly on mobile), so it is detected after mount.
-  const [canShare, setCanShare] = useState(false)
+  // The Web Share API only exists in the browser (mostly on mobile).
+  const canShare = useClientValue(canUseWebShare, false)
   const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  useEffect(() => {
-    setCanShare(typeof navigator !== "undefined" && typeof navigator.share === "function")
-    return () => clearTimeout(resetTimer.current)
-  }, [])
-
-  // A new quote resets the copy feedback.
-  useEffect(() => {
-    clearTimeout(resetTimer.current)
-    setCopyStatus("idle")
-  }, [quote.id])
+  useEffect(() => () => clearTimeout(resetTimer.current), [])
 
   const handleCopy = async () => {
     try {

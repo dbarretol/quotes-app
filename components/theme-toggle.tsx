@@ -1,15 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { PosterButton } from "@/components/poster-button"
+import { useIsClient } from "@/lib/use-is-client"
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
-  // The theme is only known in the browser; render a neutral placeholder until mounted.
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  // The theme is only known in the browser; render a neutral placeholder until then.
+  const mounted = useIsClient()
 
   const isDark = mounted && resolvedTheme === "dark"
   const label = isDark ? "Switch to light theme" : "Switch to dark theme"

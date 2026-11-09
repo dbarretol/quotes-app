@@ -10,6 +10,7 @@ import { readCategoriesFromSearch, writeCategoriesToUrl } from "@/lib/category-u
 import { posterStyle } from "@/lib/category-theme"
 import { clearProgress, loadProgress, saveProgress } from "@/lib/progress-storage"
 import { ALL_CATEGORIES, ALL_QUOTES, formatAuthor, type Quote } from "@/lib/quotes"
+import { useIsClient } from "@/lib/use-is-client"
 
 const QUOTES_BY_ID = new Map(ALL_QUOTES.map((quote) => [quote.id, quote]))
 const VALID_IDS: ReadonlySet<string> = new Set(QUOTES_BY_ID.keys())
@@ -21,6 +22,26 @@ interface ResetSnapshot {
   currentQuote: Quote | null
 }
 
+interface InitialState {
+  usedIds: ReadonlySet<string>
+  currentQuote: Quote | null
+  categories: ReadonlySet<string>
+}
+
+const DEFAULT_STATE: InitialState = { usedIds: new Set(), currentQuote: null, categories: new Set(ALL_CATEGORIES) }
+
+/** Reads saved progress and the URL filter; browser only. */
+function readInitialState(): InitialState {
+  const saved = loadProgress(VALID_IDS, VALID_CATEGORIES)
+  // A category filter in the URL (e.g. a shared link) takes precedence over the saved one.
+  const fromUrl = readCategoriesFromSearch(window.location.search, ALL_CATEGORIES)
+  return {
+    usedIds: new Set(saved?.usedIds),
+    currentQuote: saved?.currentId ? (QUOTES_BY_ID.get(saved.currentId) ?? null) : null,
+    categories: fromUrl ?? (saved?.categories ? new Set(saved.categories) : DEFAULT_STATE.categories),
+  }
+}
+
 /** Poster-sized type that steps down for longer quotes so they still fit the screen. */
 function quoteSizeClass(text: string): string {
   if (text.length <= 60) return "text-[clamp(2.5rem,8vw,6rem)]"
@@ -29,29 +50,23 @@ function quoteSizeClass(text: string): string {
 }
 
 export default function QuotesApp() {
-  const [currentQuote, setCurrentQuote] = useState<Quote | null>(null)
-  const [usedIds, setUsedIds] = useState<ReadonlySet<string>>(() => new Set())
-  const [categories, setCategories] = useState<ReadonlySet<string>>(() => new Set(ALL_CATEGORIES))
-  // Saved progress is read after mount, since localStorage is not available during prerendering.
-  const [isRestored, setIsRestored] = useState(false)
+  // localStorage and the URL are only available in the browser. The prerendered page (and the
+  // first client render) shows the default state; the poster then remounts with saved progress.
+  const isClient = useIsClient()
+  return <QuotesPoster key={isClient ? "client" : "server"} isRestored={isClient} />
+}
+
+function QuotesPoster({ isRestored }: { isRestored: boolean }) {
+  const [initial] = useState(() => (isRestored ? readInitialState() : DEFAULT_STATE))
+  const [currentQuote, setCurrentQuote] = useState<Quote | null>(initial.currentQuote)
+  const [usedIds, setUsedIds] = useState<ReadonlySet<string>>(initial.usedIds)
+  const [categories, setCategories] = useState<ReadonlySet<string>>(initial.categories)
   // New quotes are announced only after the user asks for one, not when progress is restored.
   const [hasInteracted, setHasInteracted] = useState(false)
   const [resetSnapshot, setResetSnapshot] = useState<ResetSnapshot | null>(null)
   const undoTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  useEffect(() => {
-    const saved = loadProgress(VALID_IDS, VALID_CATEGORIES)
-    if (saved) {
-      setUsedIds(new Set(saved.usedIds))
-      setCurrentQuote(saved.currentId ? (QUOTES_BY_ID.get(saved.currentId) ?? null) : null)
-    }
-    // A category filter in the URL (e.g. a shared link) takes precedence over the saved one.
-    const fromUrl = readCategoriesFromSearch(window.location.search, ALL_CATEGORIES)
-    const initialCategories = fromUrl ?? (saved?.categories ? new Set(saved.categories) : null)
-    if (initialCategories) setCategories(initialCategories)
-    setIsRestored(true)
-    return () => clearTimeout(undoTimer.current)
-  }, [])
+  useEffect(() => () => clearTimeout(undoTimer.current), [])
 
   useEffect(() => {
     if (!isRestored) return
@@ -163,7 +178,7 @@ export default function QuotesApp() {
               </PosterButton>
             </>
           )}
-          {currentQuote && <QuoteActions quote={currentQuote} />}
+          {currentQuote && <QuoteActions key={currentQuote.id} quote={currentQuote} />}
         </div>
 
         <div className="flex items-center gap-4 text-sm">
